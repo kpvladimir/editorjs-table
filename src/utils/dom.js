@@ -43,7 +43,7 @@ export function getCoords(elem) {
     y1: Math.floor(rect.top + window.pageYOffset),
     x1: Math.floor(rect.left + window.pageXOffset),
     x2: Math.floor(rect.right + window.pageXOffset),
-    y2: Math.floor(rect.bottom + window.pageYOffset)
+    y2: Math.floor(rect.bottom + window.pageYOffset),
   };
 }
 
@@ -62,7 +62,7 @@ export function getRelativeCoordsOfTwoElems(firstElem, secondElem) {
     fromTopBorder: secondCoords.y1 - firstCoords.y1,
     fromLeftBorder: secondCoords.x1 - firstCoords.x1,
     fromRightBorder: firstCoords.x2 - secondCoords.x2,
-    fromBottomBorder: firstCoords.y2 - secondCoords.y2
+    fromBottomBorder: firstCoords.y2 - secondCoords.y2,
   };
 }
 
@@ -81,7 +81,7 @@ export function getCursorPositionRelativeToElement(elem, event) {
     width,
     height,
     x: clientX - x,
-    y: clientY - y
+    y: clientY - y,
   };
 }
 
@@ -106,7 +106,6 @@ export function insertAfter(newNode, referenceNode) {
 export function insertBefore(newNode, referenceNode) {
   return referenceNode.parentNode.insertBefore(newNode, referenceNode);
 }
-
 
 /**
  * Set focus to contenteditable or native input element

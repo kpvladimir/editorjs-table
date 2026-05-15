@@ -1,14 +1,14 @@
-import Popover from "./utils/popover";
-import * as $ from "./utils/dom";
-import { IconMenuSmall } from "@codexteam/icons";
+import Popover from './utils/popover';
+import * as $ from './utils/dom';
+import { IconMenuSmall } from '@codexteam/icons';
 
 /**
  * @typedef {object} PopoverItem
  * @property {string} label - button text
  * @property {string} icon - button icon
  * @property {boolean} confirmationRequired - if true, a confirmation state will be applied on the first click
- * @property {function} hideIf - if provided, item will be hid, if this method returns true
- * @property {function} onClick - click callback
+ * @property {Function} hideIf - if provided, item will be hid, if this method returns true
+ * @property {Function} onClick - click callback
  */
 
 /**
@@ -24,14 +24,14 @@ export default class Toolbox {
   /**
    * Creates toolbox buttons and toolbox menus
    *
-   * @param {Object} config
+   * @param {object} config
    * @param {any} config.api - Editor.js api
    * @param {PopoverItem[]} config.items - Editor.js api
-   * @param {function} config.onOpen - callback fired when the Popover is opening
-   * @param {function} config.onClose - callback fired when the Popover is closing
+   * @param {Function} config.onOpen - callback fired when the Popover is opening
+   * @param {Function} config.onClose - callback fired when the Popover is closing
    * @param {string} config.cssModifier - the modifier for the Toolbox. Allows to add some specific styles.
    */
-  constructor({ api, items, onOpen, onClose, cssModifier = "" }) {
+  constructor({ api, items, onOpen, onClose, cssModifier = '' }) {
     this.api = api;
 
     this.items = items;
@@ -48,9 +48,9 @@ export default class Toolbox {
    */
   static get CSS() {
     return {
-      toolbox: "tc-toolbox",
-      toolboxShowed: "tc-toolbox--showed",
-      toggler: "tc-toolbox__toggler",
+      toolbox: 'tc-toolbox',
+      toolboxShowed: 'tc-toolbox--showed',
+      toggler: 'tc-toolbox__toggler',
     };
   }
 
@@ -67,12 +67,12 @@ export default class Toolbox {
    * @returns {Element}
    */
   createToolbox() {
-    const wrapper = $.make("div", [
+    const wrapper = $.make('div', [
       Toolbox.CSS.toolbox,
-      this.cssModifier ? `${Toolbox.CSS.toolbox}--${this.cssModifier}` : "",
+      this.cssModifier ? `${Toolbox.CSS.toolbox}--${this.cssModifier}` : '',
     ]);
 
-    wrapper.dataset.mutationFree = "true";
+    wrapper.dataset.mutationFree = 'true';
     const popover = this.createPopover();
     const toggler = this.createToggler();
 
@@ -88,11 +88,11 @@ export default class Toolbox {
    * @returns {Element}
    */
   createToggler() {
-    const toggler = $.make("div", Toolbox.CSS.toggler, {
+    const toggler = $.make('div', Toolbox.CSS.toggler, {
       innerHTML: IconMenuSmall,
     });
 
-    toggler.addEventListener("click", () => {
+    toggler.addEventListener('click', () => {
       this.togglerClicked();
     });
 
@@ -130,7 +130,7 @@ export default class Toolbox {
   /**
    * Shows the Toolbox
    *
-   * @param {function} computePositionMethod - method that returns the position coordinate
+   * @param {Function} computePositionMethod - method that returns the position coordinate
    * @returns {void}
    */
   show(computePositionMethod) {

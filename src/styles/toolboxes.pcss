@@ -2,8 +2,8 @@
   --toolbox-padding: 6px;
   --popover-margin: 30px;
   --toggler-click-zone-size: 30px;
-  --toggler-dots-color: #7B7E89;
-  --toggler-dots-color-hovered: #1D202B;
+  --toggler-dots-color: #7b7e89;
+  --toggler-dots-color-hovered: #1d202b;
 
   position: absolute;
   cursor: pointer;
@@ -28,12 +28,13 @@
 
   &--showed {
     opacity: 1;
+    z-index: 10;
   }
 
   .tc-popover {
     position: absolute;
     top: 0;
-    left: var(--popover-margin)
+    left: var(--popover-margin);
   }
 
   &__toggler {

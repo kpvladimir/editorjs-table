@@ -2,8 +2,13 @@
   "include": ["src/**/*"],
   "compilerOptions": {
     "allowJs": true,
+    "allowSyntheticDefaultImports": true,
     "declaration": true,
     "emitDeclarationOnly": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "outDir": "dist",
+    "skipLibCheck": true,
+    "target": "ES2020"
   }
 }

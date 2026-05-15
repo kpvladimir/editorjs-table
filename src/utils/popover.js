@@ -5,8 +5,8 @@ import * as $ from './dom';
  * @property {string} label - button text
  * @property {string} icon - button icon
  * @property {boolean} confirmationRequired - if true, a confirmation state will be applied on the first click
- * @property {function} hideIf - if provided, item will be hid, if this method returns true
- * @property {function} onClick - click callback
+ * @property {Function} hideIf - if provided, item will be hid, if this method returns true
+ * @property {Function} onClick - click callback
  */
 
 /**
@@ -17,7 +17,7 @@ export default class Popover {
    * @param {object} options - constructor options
    * @param {PopoverItem[]} options.items - constructor options
    */
-  constructor({items}) {
+  constructor({ items }) {
     this.items = items;
     this.wrapper = undefined;
     this.itemEls = [];
@@ -36,7 +36,7 @@ export default class Popover {
       itemHidden: 'tc-popover__item--hidden',
       itemConfirmState: 'tc-popover__item--confirm',
       itemIcon: 'tc-popover__item-icon',
-      itemLabel: 'tc-popover__item-label'
+      itemLabel: 'tc-popover__item-label',
     };
   }
 
@@ -51,10 +51,10 @@ export default class Popover {
     this.items.forEach((item, index) => {
       const itemEl = $.make('div', Popover.CSS.item);
       const icon = $.make('div', Popover.CSS.itemIcon, {
-        innerHTML: item.icon
+        innerHTML: item.icon,
       });
       const label = $.make('div', Popover.CSS.itemLabel, {
-        textContent: item.label
+        textContent: item.label,
       });
 
       itemEl.dataset.index = index;
@@ -80,6 +80,7 @@ export default class Popover {
    * Popover wrapper click listener
    * Used to delegate clicks in items
    *
+   * @param event
    * @returns {void}
    */
   popoverClicked(event) {
@@ -107,6 +108,7 @@ export default class Popover {
   /**
    * Enable the confirmation state on passed item
    *
+   * @param itemEl
    * @returns {void}
    */
   setConfirmationState(itemEl) {
@@ -116,6 +118,7 @@ export default class Popover {
   /**
    * Disable the confirmation state on passed item
    *
+   * @param itemEl
    * @returns {void}
    */
   clearConfirmationState(itemEl) {
@@ -125,6 +128,7 @@ export default class Popover {
   /**
    * Check if passed item has the confirmation state
    *
+   * @param itemEl
    * @returns {boolean}
    */
   hasConfirmationState(itemEl) {
@@ -165,7 +169,7 @@ export default class Popover {
    */
   close() {
     this.wrapper.classList.remove(Popover.CSS.popoverOpened);
-    this.itemEls.forEach(el => {
+    this.itemEls.forEach((el) => {
       this.clearConfirmationState(el);
     });
   }

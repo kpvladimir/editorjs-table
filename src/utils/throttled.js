@@ -1,9 +1,8 @@
-
 /**
  * Limits the frequency of calling a function
  *
  * @param {number} delay - delay between calls in milliseconds
- * @param {function} fn - function to be throttled
+ * @param {Function} fn - function to be throttled
  */
 export default function throttled(delay, fn) {
   let lastCall = 0;

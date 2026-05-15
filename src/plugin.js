@@ -30,7 +30,6 @@ import { IconTable, IconTableWithHeadings, IconTableWithoutHeadings, IconStretch
  * @typedef {import('@editorjs/editorjs').PasteEvent} PasteEvent
  */
 
-
 /**
  * Table block for Editor.js
  */
@@ -59,14 +58,14 @@ export default class TableBlock {
    *
    * @param {TableConstructor} init
    */
-  constructor({data, config, api, readOnly, block}) {
+  constructor({ data, config, api, readOnly, block }) {
     this.api = api;
     this.readOnly = readOnly;
     this.config = config;
     this.data = {
       withHeadings: this.getConfig('withHeadings', false, data),
       stretched: this.getConfig('stretched', false, data),
-      content: data && data.content ? data.content : []
+      content: data && data.content ? data.content : [],
     };
     this.table = null;
     this.block = block;
@@ -82,7 +81,7 @@ export default class TableBlock {
   static get toolbox() {
     return {
       icon: IconTable,
-      title: 'Table'
+      title: 'Table',
     };
   }
 
@@ -120,7 +119,7 @@ export default class TableBlock {
         onActivate: () => {
           this.data.withHeadings = true;
           this.table.setHeadingsSetting(this.data.withHeadings);
-        }
+        },
       }, {
         label: this.api.i18n.t('Without headings'),
         icon: IconTableWithoutHeadings,
@@ -130,7 +129,7 @@ export default class TableBlock {
         onActivate: () => {
           this.data.withHeadings = false;
           this.table.setHeadingsSetting(this.data.withHeadings);
-        }
+        },
       }, {
         label: this.data.stretched ? this.api.i18n.t('Collapse') : this.api.i18n.t('Stretch'),
         icon: this.data.stretched ? IconCollapse : IconStretch,
@@ -139,10 +138,11 @@ export default class TableBlock {
         onActivate: () => {
           this.data.stretched = !this.data.stretched;
           this.block.stretched = this.data.stretched;
-        }
-      }
+        },
+      },
     ];
   }
+
   /**
    * Extract table data from the view
    *
@@ -154,7 +154,7 @@ export default class TableBlock {
     const result = {
       withHeadings: this.data.withHeadings,
       stretched: this.data.stretched,
-      content: tableContent
+      content: tableContent,
     };
 
     return result;
@@ -213,16 +213,16 @@ export default class TableBlock {
     /** Generate a content matrix */
     const content = rows.map((row) => {
       /** Get cells from row */
-      const cells = Array.from(row.querySelectorAll('th, td'))
+      const cells = Array.from(row.querySelectorAll('th, td'));
 
       /** Return cells content */
-      return cells.map((cell) => cell.innerHTML);
+      return cells.map(cell => cell.innerHTML);
     });
 
     /** Update Tool's data */
     this.data = {
       withHeadings: firstRowHeading !== null,
-      content
+      content,
     };
 
     /** Update table block */
