@@ -179,12 +179,17 @@ export default class TableBlock {
    */
   getConfig(configName, defaultValue = undefined, savedData = undefined) {
     const data = this.data || savedData;
+    const hasValue = object => object && Object.prototype.hasOwnProperty.call(object, configName);
 
-    if (data) {
-      return data[configName] ? data[configName] : defaultValue;
+    if (hasValue(data)) {
+      return data[configName];
     }
 
-    return this.config && this.config[configName] ? this.config[configName] : defaultValue;
+    if (hasValue(this.config)) {
+      return this.config[configName];
+    }
+
+    return defaultValue;
   }
 
   /**
