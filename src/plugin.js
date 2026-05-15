@@ -104,6 +104,15 @@ export default class TableBlock {
   }
 
   /**
+   * Called after Block content is added to the page
+   *
+   * @returns {void}
+   */
+  rendered() {
+    this.block.stretched = this.data.stretched;
+  }
+
+  /**
    * Returns plugin settings
    *
    * @returns {Array}
@@ -227,6 +236,7 @@ export default class TableBlock {
     /** Update Tool's data */
     this.data = {
       withHeadings: firstRowHeading !== null,
+      stretched: this.data.stretched,
       content,
     };
 
