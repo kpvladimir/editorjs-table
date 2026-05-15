@@ -9,7 +9,7 @@ The Table Block for the [Editor.js](https://editorjs.io). Finally improved.
 Get the package
 
 ```shell
-yarn add @editorjs/table
+npm install @editorjs/table
 ```
 
 Include module at your application
@@ -19,6 +19,26 @@ import Table from '@editorjs/table'
 ```
 
 Optionally, you can load this tool from CDN [JsDelivr CDN](https://cdn.jsdelivr.net/npm/@editorjs/table@latest)
+
+## Development notes
+
+This fork was updated to use the current Vite-based build toolchain:
+
+- Vite was upgraded to `8.0.13`.
+- The Vite config was moved to `vite.config.mjs` because the current Vite plugins are ESM-only.
+- Dependency management was switched from Yarn v1 to npm. Use `npm install`, and keep `package-lock.json` committed.
+- ESLint was migrated to the flat config format in `eslint.config.mjs`.
+- PostCSS dependencies were updated and duplicate/unused build dependencies were removed.
+- The build now emits `dist/table.mjs`, `dist/table.umd.js`, and declaration files through `vite-plugin-dts`.
+
+Useful local commands:
+
+```shell
+npm install
+npm run dev
+npm run lint
+npm run build
+```
 
 
 
@@ -65,6 +85,8 @@ var editor = EditorJS({
 | `maxCols`          | `number` | maximum number of columns. `5` by params |
 | `withHeadings`     | `boolean` | toggle table headings. `false` by default |
 | `stretched`        | `boolean` | whether the table is stretched to fill the full width of the container |
+
+The `withHeadings` and `stretched` config params are applied when a new table block is inserted. Saved table data can override these values for each block. When pasting an HTML table, the current `stretched` state is preserved, while `withHeadings` is detected from the pasted table markup.
 
 ## Output data
 
