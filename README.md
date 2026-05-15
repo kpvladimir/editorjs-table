@@ -65,6 +65,7 @@ var editor = EditorJS({
       class: Table,
       inlineToolbar: true,
       config: {
+        withHeadings: true,
         rows: 2,
         cols: 3,
         maxRows: 5,
@@ -79,14 +80,16 @@ var editor = EditorJS({
 
 | Field              | Type     | Description          |
 | ------------------ | -------- | ---------------------------------------- |
-| `rows`             | `number` | initial number of rows. `2` by default |
+| `rows`             | `number` | initial number of body rows. `2` by default. If `withHeadings` is enabled, one heading row is added above these rows |
 | `cols`             | `number` | initial number of columns. `2` by default |
-| `maxRows`          | `number` | maximum number of rows. `5` by params |
+| `maxRows`          | `number` | maximum total number of rows, including a heading row when `withHeadings` is enabled. `5` by params |
 | `maxCols`          | `number` | maximum number of columns. `5` by params |
 | `withHeadings`     | `boolean` | toggle table headings. `false` by default |
 | `stretched`        | `boolean` | whether the table is stretched to fill the full width of the container |
 
 The `withHeadings` and `stretched` config params are applied when a new table block is inserted. Saved table data can override these values for each block. When pasting an HTML table, the current `stretched` state is preserved, while `withHeadings` is detected from the pasted table markup.
+
+`maxRows` and `maxCols` limit adding new rows and columns from the add buttons, toolboxes, and keyboard actions. Saved table data is rendered as-is even if it already exceeds the configured limit.
 
 ## Output data
 

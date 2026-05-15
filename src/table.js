@@ -188,7 +188,7 @@ export default class Table {
           label: this.api.i18n.t('Add column to left'),
           icon: IconDirectionLeftDown,
           hideIf: () => {
-            return this.numberOfColumns === this.config.maxcols;
+            return this.isColumnsLimitReached;
           },
           onClick: () => {
             this.addColumn(this.selectedColumn, true);
@@ -199,7 +199,7 @@ export default class Table {
           label: this.api.i18n.t('Add column to right'),
           icon: IconDirectionRightDown,
           hideIf: () => {
-            return this.numberOfColumns === this.config.maxcols;
+            return this.isColumnsLimitReached;
           },
           onClick: () => {
             this.addColumn(this.selectedColumn + 1, true);
@@ -243,7 +243,7 @@ export default class Table {
           label: this.api.i18n.t('Add row above'),
           icon: IconDirectionUpRight,
           hideIf: () => {
-            return this.numberOfRows === this.config.maxrows;
+            return this.isRowsLimitReached;
           },
           onClick: () => {
             this.addRow(this.selectedRow, true);
@@ -254,7 +254,7 @@ export default class Table {
           label: this.api.i18n.t('Add row below'),
           icon: IconDirectionDownRight,
           hideIf: () => {
-            return this.numberOfRows === this.config.maxrows;
+            return this.isRowsLimitReached;
           },
           onClick: () => {
             this.addRow(this.selectedRow + 1, true);
@@ -293,7 +293,12 @@ export default class Table {
       this.focusedCell.row += 1;
       this.focusCell(this.focusedCell);
     } else {
-      this.addRow();
+      const insertedRow = this.addRow();
+
+      if (!insertedRow) {
+        return;
+      }
+
       this.focusedCell.row += 1;
       this.focusCell(this.focusedCell);
       this.updateToolboxesPosition(0, 0);
@@ -360,15 +365,18 @@ export default class Table {
    *
    * @param {number} columnIndex - number in the array of columns, where new column to insert, -1 if insert at the end
    * @param {boolean} [setFocus] - pass true to focus the first cell
+   * @param {boolean} [ignoreLimit] - pass true to add initial saved columns over the configured limit
    */
-  addColumn(columnIndex = -1, setFocus = false) {
+  addColumn(columnIndex = -1, setFocus = false, ignoreLimit = false) {
     const numberOfColumns = this.numberOfColumns;
 
     /**
      * Check if the number of columns has reached the maximum allowed columns specified in the configuration,
      * and if so, exit the function to prevent adding more columns beyond the limit.
      */
-    if (this.config && this.config.maxcols && this.numberOfColumns >= this.config.maxcols) {
+    if (!ignoreLimit && this.isColumnsLimitReached) {
+      this.updateAddButtonsState();
+
       return;
     }
 
@@ -399,11 +407,7 @@ export default class Table {
       }
     }
 
-    const addColButton = this.wrapper.querySelector(`.${CSS.addColumn}`);
-
-    if (this.config?.maxcols && this.numberOfColumns > this.config.maxcols - 1 && addColButton) {
-      addColButton.classList.add(CSS.addColumnDisabled);
-    }
+    this.updateAddButtonsState();
     this.addHeadingAttrToFirstRow();
   };
 
@@ -412,12 +416,22 @@ export default class Table {
    *
    * @param {number} index - number in the array of rows, where new column to insert, -1 if insert at the end
    * @param {boolean} [setFocus] - pass true to focus the inserted row
+   * @param {boolean} [ignoreLimit] - pass true to add initial saved rows over the configured limit
    * @returns {HTMLElement} row
    */
-  addRow(index = -1, setFocus = false) {
+  addRow(index = -1, setFocus = false, ignoreLimit = false) {
     let insertedRow;
     const rowElem = $.make('div', CSS.row);
-    const addRowButton = this.wrapper.querySelector(`.${CSS.addRow}`);
+
+    /**
+     * Check if the number of rows has reached the maximum allowed rows specified in the configuration,
+     * and if so, exit the function to prevent adding more rows beyond the limit.
+     */
+    if (!ignoreLimit && this.isRowsLimitReached) {
+      this.updateAddButtonsState();
+
+      return undefined;
+    }
 
     if (this.tunes.withHeadings) {
       this.removeHeadingAttrFromFirstRow();
@@ -429,14 +443,6 @@ export default class Table {
      * It is necessary that the first line is filled in correctly
      */
     const numberOfColumns = this.numberOfColumns;
-
-    /**
-     * Check if the number of rows has reached the maximum allowed rows specified in the configuration,
-     * and if so, exit the function to prevent adding more columns beyond the limit.
-     */
-    if (this.config && this.config.maxrows && this.numberOfRows >= this.config.maxrows && addRowButton) {
-      return;
-    }
 
     if (index > 0 && index <= this.numberOfRows) {
       const row = this.getRow(index);
@@ -458,9 +464,7 @@ export default class Table {
       $.focus(insertedRowFirstCell);
     }
 
-    if (this.config && this.config.maxrows && this.numberOfRows >= this.config.maxrows && addRowButton) {
-      addRowButton.classList.add(CSS.addRowDisabled);
-    }
+    this.updateAddButtonsState();
 
     return insertedRow;
   };
@@ -480,11 +484,7 @@ export default class Table {
 
       cell.remove();
     }
-    const addColButton = this.wrapper.querySelector(`.${CSS.addColumn}`);
-
-    if (addColButton) {
-      addColButton.classList.remove(CSS.addColumnDisabled);
-    }
+    this.updateAddButtonsState();
   }
 
   /**
@@ -494,11 +494,7 @@ export default class Table {
    */
   deleteRow(index) {
     this.getRow(index).remove();
-    const addRowButton = this.wrapper.querySelector(`.${CSS.addRow}`);
-
-    if (addRowButton) {
-      addRowButton.classList.remove(CSS.addRowDisabled);
-    }
+    this.updateAddButtonsState();
 
     this.addHeadingAttrToFirstRow();
   }
@@ -555,8 +551,9 @@ export default class Table {
     const configCols = !isNaN(parsedCols) && parsedCols > 0 ? parsedCols : undefined;
     const defaultRows = 2;
     const defaultCols = 2;
-    const rows = contentRows || configRows || defaultRows;
-    const cols = contentCols || configCols || defaultCols;
+    const headingRows = this.data.withHeadings ? 1 : 0;
+    const rows = contentRows || this.limitInitialSize((configRows || defaultRows) + headingRows, this.maxRows);
+    const cols = contentCols || this.limitInitialSize(configCols || defaultCols, this.maxCols);
 
     return {
       rows: rows,
@@ -573,12 +570,14 @@ export default class Table {
     const { rows, cols } = this.computeInitialSize();
 
     for (let i = 0; i < rows; i++) {
-      this.addRow();
+      this.addRow(undefined, false, true);
     }
 
     for (let i = 0; i < cols; i++) {
-      this.addColumn();
+      this.addColumn(undefined, false, true);
     }
+
+    this.updateAddButtonsState();
   }
 
   /**
@@ -639,6 +638,97 @@ export default class Table {
     }
 
     return 0;
+  }
+
+  /**
+   * Get maximum rows count from config.
+   *
+   * @returns {number|undefined}
+   */
+  get maxRows() {
+    return this.getPositiveIntegerConfig('maxRows', 'maxrows');
+  }
+
+  /**
+   * Get maximum columns count from config.
+   *
+   * @returns {number|undefined}
+   */
+  get maxCols() {
+    return this.getPositiveIntegerConfig('maxCols', 'maxcols');
+  }
+
+  /**
+   * Is rows limit reached.
+   *
+   * @returns {boolean}
+   */
+  get isRowsLimitReached() {
+    return this.maxRows !== undefined && this.numberOfRows >= this.maxRows;
+  }
+
+  /**
+   * Is columns limit reached.
+   *
+   * @returns {boolean}
+   */
+  get isColumnsLimitReached() {
+    return this.maxCols !== undefined && this.numberOfColumns >= this.maxCols;
+  }
+
+  /**
+   * Get a positive integer config value by one of possible names.
+   *
+   * @param {...string} configNames - config keys to check
+   * @returns {number|undefined}
+   */
+  getPositiveIntegerConfig(...configNames) {
+    if (!this.config) {
+      return undefined;
+    }
+
+    for (const configName of configNames) {
+      const value = Number.parseInt(this.config[configName]);
+
+      if (!isNaN(value) && value > 0) {
+        return value;
+      }
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Applies the configured limit to initial rows or columns count.
+   *
+   * @param {number} size - initial size
+   * @param {number|undefined} limit - configured maximum size
+   * @returns {number}
+   */
+  limitInitialSize(size, limit) {
+    if (limit === undefined) {
+      return size;
+    }
+
+    return Math.min(size, limit);
+  }
+
+  /**
+   * Updates add row/column buttons state according to configured limits.
+   *
+   * @returns {void}
+   */
+  updateAddButtonsState() {
+    const addColButton = this.wrapper.querySelector(`.${CSS.addColumn}`);
+    const addRowButton = this.wrapper.querySelector(`.${CSS.addRow}`);
+
+    if (addColButton) {
+      addColButton.classList.toggle(CSS.addColumnDisabled, this.isColumnsLimitReached);
+    }
+
+    if (addRowButton) {
+      addRowButton.classList.toggle(CSS.addRowDisabled, this.isRowsLimitReached);
+    }
   }
 
   /**
