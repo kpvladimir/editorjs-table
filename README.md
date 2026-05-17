@@ -1,6 +1,7 @@
 # Table tool
 
 The Table Block for the [Editor.js](https://editorjs.io). Finally improved.
+Based on version 2.4.5 from https://github.com/editor-js/table.
 
 ![](assets/68747470733a2f2f636170656c6c612e706963732f34313239346365632d613262332d343135372d383339392d6666656665643364386666642e6a7067.jpeg)
 
@@ -9,13 +10,13 @@ The Table Block for the [Editor.js](https://editorjs.io). Finally improved.
 Get the package
 
 ```shell
-npm install @editorjs/table
+npm install @kpvladimir/editorjs-table
 ```
 
 Include module at your application
 
 ```javascript
-import Table from '@editorjs/table'
+import Table from "@kpvladimir/editorjs-table";
 ```
 
 Optionally, you can load this tool from CDN [JsDelivr CDN](https://cdn.jsdelivr.net/npm/@editorjs/table@latest)
@@ -40,19 +41,17 @@ npm run lint
 npm run build
 ```
 
-
-
 ## Usage
 
 Add a new Tool to the `tools` property of the Editor.js initial config.
 
 ```javascript
-import Table from '@editorjs/table';
+import Table from "@editorjs/table";
 
 var editor = EditorJS({
   tools: {
     table: Table,
-  }
+  },
 });
 ```
 
@@ -78,14 +77,14 @@ var editor = EditorJS({
 
 ## Config Params
 
-| Field              | Type     | Description          |
-| ------------------ | -------- | ---------------------------------------- |
-| `rows`             | `number` | initial number of body rows. `2` by default. If `withHeadings` is enabled, one heading row is added above these rows |
-| `cols`             | `number` | initial number of columns. `2` by default |
-| `maxRows`          | `number` | maximum total number of rows, including a heading row when `withHeadings` is enabled. `5` by params |
-| `maxCols`          | `number` | maximum number of columns. `5` by params |
-| `withHeadings`     | `boolean` | toggle table headings. `false` by default |
-| `stretched`        | `boolean` | whether the table wrapper is stretched to fill the full width of the table block. `false` by default |
+| Field          | Type      | Description                                                                                                          |
+| -------------- | --------- | -------------------------------------------------------------------------------------------------------------------- |
+| `rows`         | `number`  | initial number of body rows. `2` by default. If `withHeadings` is enabled, one heading row is added above these rows |
+| `cols`         | `number`  | initial number of columns. `2` by default                                                                            |
+| `maxRows`      | `number`  | maximum total number of rows, including a heading row when `withHeadings` is enabled. `5` by params                  |
+| `maxCols`      | `number`  | maximum number of columns. `5` by params                                                                             |
+| `withHeadings` | `boolean` | toggle table headings. `false` by default                                                                            |
+| `stretched`    | `boolean` | whether the table wrapper is stretched to fill the full width of the table block. `false` by default                 |
 
 The `withHeadings` and `stretched` config params are applied when a new table block is inserted. Saved table data can override these values for each block. When `stretched` is `false`, the table wrapper (`.tc-wrap`) is rendered at 80% width and centered inside the table block. When `stretched` is `true`, only the table wrapper is expanded to 100% of the table block; the Editor.js block itself is not stretched. When pasting an HTML table, the current `stretched` state is preserved, while `withHeadings` is detected from the pasted table markup.
 
@@ -95,39 +94,23 @@ The `withHeadings` and `stretched` config params are applied when a new table bl
 
 This Tool returns `data` in the following format
 
-| Field          | Type         | Description           |
-| -------------- | ------------ | ----------------------------------------- |
-| `withHeadings` | `boolean`    | Uses the first line as headings |
+| Field          | Type         | Description                                                                      |
+| -------------- | ------------ | -------------------------------------------------------------------------------- |
+| `withHeadings` | `boolean`    | Uses the first line as headings                                                  |
 | `stretched`    | `boolean`    | whether the table wrapper is stretched to fill the full width of the table block |
-| `content`      | `string[][]` | two-dimensional array with table contents |
+| `content`      | `string[][]` | two-dimensional array with table contents                                        |
 
 ```json
 {
-  "type" : "table",
-  "data" : {
+  "type": "table",
+  "data": {
     "withHeadings": true,
     "stretched": false,
-    "content" : [ [ "Kine", "Pigs", "Chicken" ], [ "1 pcs", "3 pcs", "12 pcs" ], [ "100$", "200$", "150$" ] ]
+    "content": [
+      ["Kine", "Pigs", "Chicken"],
+      ["1 pcs", "3 pcs", "12 pcs"],
+      ["100$", "200$", "150$"]
+    ]
   }
 }
 ```
-
-## CSP support
-
-If you're using Content Security Policy (CSP) pass a `nonce` via [`<meta property="csp-nonce" content={{ nonce }} />`](https://github.com/marco-prontera/vite-plugin-css-injected-by-js#usestrictcsp-boolean) in your document head.
-
-# Support maintenance 🎖
-
-If you're using this tool and editor.js in your business, please consider supporting their maintenance and evolution.
-
-[http://opencollective.com/editorjs](http://opencollective.com/editorjs)
-
-# About CodeX
-
-<img align="right" width="120" height="120" src="https://codex.so/public/app/img/codex-logo.svg" hspace="50">
-
-CodeX is a team of digital specialists around the world interested in building high-quality open source products on a global market. We are [open](https://codex.so/join) for young people who want to constantly improve their skills and grow professionally with experiments in leading technologies.
-
-| 🌐 | Join  👋  | Twitter | Instagram |
-| -- | -- | -- | -- |
-| [codex.so](https://codex.so) | [codex.so/join](https://codex.so/join) |[@codex_team](http://twitter.com/codex_team) | [@codex_team](http://instagram.com/codex_team) |
