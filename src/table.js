@@ -14,6 +14,7 @@ import {
 const CSS = {
   wrapper: 'tc-wrap',
   wrapperReadOnly: 'tc-wrap--readonly',
+  wrapperStretched: 'tc-wrap--stretched',
   table: 'tc-table',
   row: 'tc-row',
   withHeadings: 'tc-table--heading',
@@ -513,6 +514,8 @@ export default class Table {
       this.wrapper.classList.add(CSS.wrapperReadOnly);
     }
 
+    this.setStretchedSetting(this.data.stretched);
+
     this.wrapper.appendChild(this.toolboxRow.element);
     this.wrapper.appendChild(this.toolboxColumn.element);
     this.wrapper.appendChild(this.table);
@@ -909,6 +912,15 @@ export default class Table {
       this.table.classList.remove(CSS.withHeadings);
       this.removeHeadingAttrFromFirstRow();
     }
+  }
+
+  /**
+   * Sets wrapper width mode.
+   *
+   * @param {boolean} stretched - stretch wrapper to the block width
+   */
+  setStretchedSetting(stretched) {
+    this.wrapper.classList.toggle(CSS.wrapperStretched, stretched);
   }
 
   /**

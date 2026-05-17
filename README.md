@@ -85,9 +85,9 @@ var editor = EditorJS({
 | `maxRows`          | `number` | maximum total number of rows, including a heading row when `withHeadings` is enabled. `5` by params |
 | `maxCols`          | `number` | maximum number of columns. `5` by params |
 | `withHeadings`     | `boolean` | toggle table headings. `false` by default |
-| `stretched`        | `boolean` | whether the table is stretched to fill the full width of the container |
+| `stretched`        | `boolean` | whether the table wrapper is stretched to fill the full width of the table block. `false` by default |
 
-The `withHeadings` and `stretched` config params are applied when a new table block is inserted. Saved table data can override these values for each block. When pasting an HTML table, the current `stretched` state is preserved, while `withHeadings` is detected from the pasted table markup.
+The `withHeadings` and `stretched` config params are applied when a new table block is inserted. Saved table data can override these values for each block. When `stretched` is `false`, the table wrapper (`.tc-wrap`) is rendered at 80% width and centered inside the table block. When `stretched` is `true`, only the table wrapper is expanded to 100% of the table block; the Editor.js block itself is not stretched. When pasting an HTML table, the current `stretched` state is preserved, while `withHeadings` is detected from the pasted table markup.
 
 `maxRows` and `maxCols` limit adding new rows and columns from the add buttons, toolboxes, and keyboard actions. Saved table data is rendered as-is even if it already exceeds the configured limit.
 
@@ -98,7 +98,7 @@ This Tool returns `data` in the following format
 | Field          | Type         | Description           |
 | -------------- | ------------ | ----------------------------------------- |
 | `withHeadings` | `boolean`    | Uses the first line as headings |
-| `stretched`    | `boolean`    | whether the table is stretched to fill the full width of the container |
+| `stretched`    | `boolean`    | whether the table wrapper is stretched to fill the full width of the table block |
 | `content`      | `string[][]` | two-dimensional array with table contents |
 
 ```json
